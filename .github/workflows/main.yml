@@ -16,8 +16,8 @@ jobs:
     - name: GivePermisson
       run: chmod +x ./start.sh
     
-    - name: configure
+    - name: Compile
       run: ./start.sh
       
-    - name: make
+    - name: Run
       run: ./File-Protector
