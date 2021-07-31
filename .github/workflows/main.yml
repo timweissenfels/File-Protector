@@ -1,0 +1,23 @@
+name: C/C++ CI
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v2
+      
+    - name: setup_boost
+      run: sudo apt-get install libboost-all-dev
+    
+    - name: GivePermisson
+      run: chmod +x ./start.sh
+    
+    - name: configure
+      run: ./start.sh
+      
+    - name: make
+      run: ./File-Protector
