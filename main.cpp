@@ -35,8 +35,13 @@ int getSeed()
 }
 
 int main() {
-    uint256_t max_num = (std::numeric_limits<uint256_t>::max)();
+    uint512_t max_num = (std::numeric_limits<uint512_t>::max)();
+    
+    //Get Random 512 Bit odd Number
     boost::mt19937 random_generator(getSeed());
-    std::cout << generate_number(random_generator,max_num) << std::endl;
+    uint512_t rand_num = 0;
+    while(rand_num % 2 == 0) { rand_num = generate_number(random_generator,max_num);}
+
+    std::cout << rand_num << std::endl; 
     return 0;
 }
