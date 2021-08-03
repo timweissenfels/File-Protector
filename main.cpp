@@ -11,7 +11,7 @@
 using namespace boost::multiprecision;
 typedef number<cpp_int_backend<2048, 2048, unsigned_magnitude, checked>> uint2048_t;
 /*
-1.Generate a random 512 bit odd number, say p
+1.Generate a random 2048 bit odd number, say p
 
 2. Test to see if p is prime; 
 if it is, return p; this is expected to occur after testing about Log(p)/2 ∼177 candidates
@@ -23,21 +23,6 @@ template <class T>
 T generate_number(auto &random_generator, T max) {
     boost::random::uniform_int_distribution<T> dist(1, max);
     return dist(random_generator);
-}
-
-template <class T>
-bool isPrime(T numb)
-{
-    T it;
-    for (it = 2; it < numb; it++)
-    {
-        if ((numb % it) == 0) {
-            std::cout << "Non" << std::endl;
-            return false;
-        }
-    }
-
-    return true;
 }
 
 template <class T>
@@ -67,7 +52,7 @@ int main() {
     uint2048_t max_num = (std::numeric_limits<uint1024_t>::max)();
     max_num *= max_num;
     
-    //Get Random 1024 Bit odd Number
+    //Get Random 2048 Bit odd Number
     boost::mt19937 random_generator(getSeed());
     auto rand_num = generate_number(random_generator,max_num);
     while(!check_prime(rand_num)) { 
