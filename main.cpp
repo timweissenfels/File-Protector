@@ -47,10 +47,8 @@ bool check_prime(T num) {
 
    boost::mt11213b gen2(clock());
 
-   for(unsigned i = 0; i < 100000; ++i) {
-      if(miller_rabin_test(num, 25, gen2)) 
+   if(miller_rabin_test(num, 45, gen2)) 
         return true;
-   }
    return false;
 }
 
@@ -66,22 +64,15 @@ int getSeed()
 }
 
 int main() {
-    uint128_t max_num = (std::numeric_limits<uint128_t>::max)();
-    auto t1 = std::chrono::high_resolution_clock::now(); 
+    auto max_num = (std::numeric_limits<uint1024_t>::max)();
     
     //Get Random 128 Bit odd Number
-    boost::mt19937 random_generator(clock());
+    boost::mt19937 random_generator(getSeed());
     auto rand_num = generate_number(random_generator,max_num);
-   
     while(!check_prime(rand_num)) { 
         rand_num = generate_number(random_generator,max_num);
-        std::cout << rand_num << std::endl;
     }
 
-    std::cout << "FOUND: " << rand_num << std::endl;
-    
-    auto t2 = std::chrono::high_resolution_clock::now();
-    auto duration = std::chrono::duration_cast<std::chrono::seconds>( t2 - t1 ).count();
-    std::cout << duration << std::endl;
+    std::cout << rand_num << std::endl;
     return 0;
 }
