@@ -9,7 +9,7 @@
 #include <boost/multiprecision/miller_rabin.hpp>
 
 using namespace boost::multiprecision;
-
+typedef number<cpp_int_backend<2048, 2048, unsigned_magnitude, checked>> uint2048_t;
 /*
 1.Generate a random 512 bit odd number, say p
 
@@ -64,9 +64,10 @@ int getSeed()
 }
 
 int main() {
-    auto max_num = (std::numeric_limits<uint1024_t>::max)();
+    uint2048_t max_num = (std::numeric_limits<uint1024_t>::max)();
+    max_num *= max_num;
     
-    //Get Random 128 Bit odd Number
+    //Get Random 1024 Bit odd Number
     boost::mt19937 random_generator(getSeed());
     auto rand_num = generate_number(random_generator,max_num);
     while(!check_prime(rand_num)) { 
