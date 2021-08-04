@@ -9,15 +9,26 @@
 #include <boost/multiprecision/miller_rabin.hpp>
 
 using namespace boost::multiprecision;
+
 typedef number<cpp_int_backend<2048, 2048, unsigned_magnitude, checked>> uint2048_t;
-/*
-1.Generate a random 2048 bit odd number, say p
+typedef number<cpp_int_backend<4096, 4096, unsigned_magnitude, checked>> uint4096_t;
 
-2. Test to see if p is prime; 
-if it is, return p; this is expected to occur after testing about Log(p)/2 ∼177 candidates
-
-3. Otherwise set p=p+2, goto 2
-*/
+namespace std {
+    template<> class numeric_limits<uint2048_t> : public std::numeric_limits<unsigned int> {
+        public:
+            static constexpr uint2048_t max() {
+                uint2048_t ret = (std::numeric_limits<uint1024_t>::max)();
+                return (ret*ret);
+            };
+    };
+    template<> class numeric_limits<uint4096_t> : public std::numeric_limits<unsigned int> {
+        public:
+            static constexpr uint4096_t max() {
+                uint4096_t ret = (std::numeric_limits<uint2048_t>::max)();
+                return (ret*ret);
+            };
+    };
+}
 
 template <class T>
 T generate_number(auto &random_generator, T max) {
@@ -32,14 +43,13 @@ bool check_prime(T num) {
 
    boost::mt11213b gen2(clock());
 
-   if(miller_rabin_test(num, 45, gen2)) 
+   if(miller_rabin_test(num, 40, gen2)) 
         return true;
    return false;
 }
 
 // Taken from https://stackoverflow.com/a/1900161/8964221
-int getSeed()
-{
+int getSeed() {
     std::ifstream rand("/dev/urandom");
     char tmp[sizeof(int)];
     rand.read(tmp,sizeof(int));
@@ -48,17 +58,20 @@ int getSeed()
     return (*number);
 }
 
-int main() {
-    uint2048_t max_num = (std::numeric_limits<uint1024_t>::max)();
-    max_num *= max_num;
+template <class T>
+T gen_prime() {
     
-    //Get Random 2048 Bit odd Number
+    T max_num = (std::numeric_limits<T>::max)();
     boost::mt19937 random_generator(getSeed());
     auto rand_num = generate_number(random_generator,max_num);
-    while(!check_prime(rand_num)) { 
+    
+    while(!check_prime(rand_num)) {
         rand_num = generate_number(random_generator,max_num);
     }
 
-    std::cout << rand_num << std::endl;
-    return 0;
+    return rand_num;
+}
+
+int main() {
+    std::cout << gen_prime<uint2048_t>() << std::endl;
 }
