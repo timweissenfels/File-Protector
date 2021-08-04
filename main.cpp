@@ -16,14 +16,14 @@ typedef number<cpp_int_backend<4096, 4096, unsigned_magnitude, checked>> uint409
 namespace std {
     template<> class numeric_limits<uint2048_t> : public std::numeric_limits<unsigned int> {
         public:
-            static constexpr uint2048_t max() {
+            static uint2048_t max() {
                 uint2048_t ret = (std::numeric_limits<uint1024_t>::max)();
                 return (ret*ret);
             }
     };
     template<> class numeric_limits<uint4096_t> : public std::numeric_limits<unsigned int> {
         public:
-            static constexpr uint4096_t max() {
+            static uint4096_t max() {
                 uint4096_t ret = (std::numeric_limits<uint2048_t>::max)();
                 return (ret*ret);
             }
