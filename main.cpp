@@ -19,19 +19,19 @@ namespace std {
             static uint2048_t max() {
                 uint2048_t ret = (std::numeric_limits<uint1024_t>::max)();
                 return (ret*ret);
-            }
+            };
     };
     template<> class numeric_limits<uint4096_t> : public std::numeric_limits<unsigned int> {
         public:
             static uint4096_t max() {
                 uint4096_t ret = (std::numeric_limits<uint2048_t>::max)();
                 return (ret*ret);
-            }
+            };
     };
 }
 
 template <class T>
-T generate_number(auto &random_generator, T max) {
+T generate_number(boost::mt19937 &random_generator, T max) {
     boost::random::uniform_int_distribution<T> dist(1, max);
     return dist(random_generator);
 }
@@ -73,5 +73,5 @@ T gen_prime() {
 }
 
 int main() {
-    std::cout << gen_prime<uint2048_t>() << std::endl;
+    std::cout << gen_prime<uint4096_t>() << std::endl;
 }
