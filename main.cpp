@@ -12,6 +12,7 @@ using namespace boost::multiprecision;
 
 typedef number<cpp_int_backend<2048, 2048, unsigned_magnitude, checked>> uint2048_t;
 typedef number<cpp_int_backend<4096, 4096, unsigned_magnitude, checked>> uint4096_t;
+typedef number<cpp_int_backend<8192, 8192, unsigned_magnitude, checked>> uint8192_t;
 
 namespace std {
     template<> class numeric_limits<uint2048_t> : public std::numeric_limits<unsigned int> {
@@ -21,10 +22,19 @@ namespace std {
                 return (ret*ret);
             };
     };
+    
     template<> class numeric_limits<uint4096_t> : public std::numeric_limits<unsigned int> {
         public:
             static uint4096_t max() {
                 uint4096_t ret = (std::numeric_limits<uint2048_t>::max)();
+                return (ret*ret);
+            };
+    };
+
+    template<> class numeric_limits<uint8192_t> : public std::numeric_limits<unsigned int> {
+        public:
+            static uint8192_t max() {
+                uint8192_t ret = (std::numeric_limits<uint4096_t>::max)();
                 return (ret*ret);
             };
     };
@@ -43,7 +53,7 @@ bool check_prime(T num) {
 
    boost::mt11213b gen2(clock());
 
-   if(miller_rabin_test(num, 40, gen2)) 
+   if(miller_rabin_test(num, 5, gen2)) 
         return true;
    return false;
 }
@@ -65,13 +75,12 @@ T gen_prime() {
     boost::mt19937 random_generator(getSeed());
     auto rand_num = generate_number(random_generator,max_num);
     
-    while(!check_prime(rand_num)) {
+    while(!check_prime(rand_num))
         rand_num = generate_number(random_generator,max_num);
-    }
 
     return rand_num;
 }
 
 int main() {
-    std::cout << gen_prime<uint4096_t>() << std::endl;
+    std::cout << gen_prime<uint8192_t>() << std::endl;
 }
