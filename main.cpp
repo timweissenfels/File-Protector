@@ -79,8 +79,11 @@ T get_key() {
     
     for(auto& element : primes) {
         auto values = element.get();
-        if(values.first) 
-            return values.second;
+        if(values.first == true) 
+            if(miller_rabin_test(values.second,10,second_generator))
+                return values.second;
+            else
+                std::cout << "Fehler" << std::endl;
     }
             
     return rand_num;
