@@ -1,2 +1,2 @@
-g++ main.cpp -O2 -o File-Protector  -Wfatal-errors -I ./boost
+g++ main.cpp -pthread -O2 -o File-Protector  -Wfatal-errors -I ./boost
 ./File-Protector
