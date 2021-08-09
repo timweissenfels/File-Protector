@@ -2,7 +2,9 @@
 
 #include <iostream>
 #include <fstream>
+#include <future>
 #include <chrono>
+#include <vector>
 #include <boost/multiprecision/cpp_int.hpp>
 #include <boost/random/mersenne_twister.hpp>
 #include <boost/random/uniform_int_distribution.hpp>
@@ -46,18 +48,6 @@ T generate_number(boost::mt19937 &random_generator, T max) {
     return dist(random_generator);
 }
 
-template <class T>
-bool check_prime(T num) {
-   if(num % 2 == 0)
-       return false;
-
-   boost::mt11213b gen2(clock());
-
-   if(miller_rabin_test(num, 5, gen2)) 
-        return true;
-   return false;
-}
-
 // Taken from https://stackoverflow.com/a/1900161/8964221
 int getSeed() {
     std::ifstream rand("/dev/urandom");
@@ -68,19 +58,35 @@ int getSeed() {
     return (*number);
 }
 
+//Return type defines key lenght (uint1024_t,uint2048_t uint4096_t,uint8192_t, etc.)
 template <class T>
-T gen_prime() {
+T get_key() {
     
     T max_num = (std::numeric_limits<T>::max)();
-    boost::mt19937 random_generator(getSeed());
+    boost::mt19937 random_generator((getSeed() + clock()));
     auto rand_num = generate_number(random_generator,max_num);
-    
-    while(!check_prime(rand_num))
-        rand_num = generate_number(random_generator,max_num);
+    boost::mt11213b second_generator(getSeed());
 
+    auto prime_checker = []<typename G>(T num, G sec_gen) -> std::pair<bool,T> {
+        if(miller_rabin_test(num, 45, sec_gen)) 
+            return std::make_pair(true,num);
+        return std::make_pair(false,num);
+    };
+
+    std::vector<std::future<std::pair<bool,T>>> primes;
+    for(int i = 0; i < 100;i++)
+        primes.emplace_back(std::async(prime_checker,generate_number(random_generator,max_num),second_generator));
+    
+    for(auto& element : primes) {
+        auto values = element.get();
+        if(values.first) 
+            return values.second;
+    }
+            
     return rand_num;
 }
 
 int main() {
-    std::cout << gen_prime<uint8192_t>() << std::endl;
+    std::cout << get_key<uint8192_t>() << std::endl;
+    std::cout << get_key<uint8192_t>() << std::endl;
 }
