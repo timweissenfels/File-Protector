@@ -1,14 +1,20 @@
 // Tim Weissenfels 2021
 
+//CPP Standard Libarys
 #include <iostream>
 #include <fstream>
 #include <future>
 #include <chrono>
 #include <vector>
+
+//Boost Libarys
 #include <boost/multiprecision/cpp_int.hpp>
 #include <boost/random/mersenne_twister.hpp>
 #include <boost/random/uniform_int_distribution.hpp>
 #include <boost/multiprecision/miller_rabin.hpp>
+
+//Google Benchmark
+#include <benchmark/benchmark.h>
 
 using namespace boost::multiprecision;
 
@@ -73,23 +79,45 @@ T get_key() {
         return std::make_pair(false,num);
     };
 
-    std::vector<std::future<std::pair<bool,T>>> primes;
-    for(int i = 0; i < 100;i++)
-        primes.emplace_back(std::async(prime_checker,generate_number(random_generator,max_num),second_generator));
-    
-    for(auto& element : primes) {
-        auto values = element.get();
-        if(values.first == true) 
-            if(miller_rabin_test(values.second,10,second_generator))
+    for(;;) {
+        std::vector<std::future<std::pair<bool,T>>> primes;
+        for(int i = 0; i < 1000;i++)
+            primes.emplace_back(std::async(prime_checker,generate_number(random_generator,max_num),second_generator));
+
+        for(auto& element : primes) {
+            auto values = element.get();
+            if(values.first == true) 
                 return values.second;
-            else
-                std::cout << "Fehler" << std::endl;
+        }
     }
-            
-    return rand_num;
+    return 0;
 }
 
-int main() {
-    std::cout << get_key<uint8192_t>() << std::endl;
-    std::cout << get_key<uint8192_t>() << std::endl;
+//BENCHMARKS
+static void BM_getSeed(benchmark::State& state) {
+    for(auto _ : state)
+        getSeed();
 }
+
+BENCHMARK(BM_getSeed)->Unit(benchmark::kMillisecond);
+
+
+static void BM_get_key(benchmark::State& state) {
+    for(auto _ : state)
+        get_key<uint4096_t>();
+//std::cout << get_key<uint4096_t>() << std::endl;
+}
+
+BENCHMARK(BM_get_key)->Unit(benchmark::kMillisecond);
+
+
+static void BM_generate_number(benchmark::State& state) {
+    boost::mt19937 generator(clock() + getSeed());
+    auto max_num = (std::numeric_limits<uint8192_t>::max)();
+    for(auto _ : state)
+        generate_number(generator,max_num);
+}
+
+BENCHMARK(BM_generate_number)->Unit(benchmark::kMillisecond);
+
+BENCHMARK_MAIN();
