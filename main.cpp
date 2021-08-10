@@ -66,8 +66,8 @@ int getSeed() {
 
 //Return type defines key lenght (uint1024_t,uint2048_t uint4096_t,uint8192_t, etc.)
 template <class T>
-T get_key() {
-    
+std::pair<T,T> get_primes() {
+    std::pair<T,T> prime_pair(0,0); 
     T max_num = (std::numeric_limits<T>::max)();
     boost::mt19937 random_generator((getSeed() + clock()));
     auto rand_num = generate_number(random_generator,max_num);
@@ -86,11 +86,17 @@ T get_key() {
 
         for(auto& element : primes) {
             auto values = element.get();
-            if(values.first == true) 
-                return values.second;
+            if(values.first == true) {
+                if(prime_pair.first == 0)
+                    prime_pair.first = values.second;
+                else 
+                    prime_pair.second = values.second;
+
+                if(prime_pair.second != 0)
+                    return prime_pair;
+            }
         }
     }
-    return 0;
 }
 
 //BENCHMARKS
@@ -102,13 +108,13 @@ static void BM_getSeed(benchmark::State& state) {
 BENCHMARK(BM_getSeed)->Unit(benchmark::kMillisecond);
 
 
-static void BM_get_key(benchmark::State& state) {
+static void BM_get_primes(benchmark::State& state) {
     for(auto _ : state)
-        get_key<uint4096_t>();
-//std::cout << get_key<uint4096_t>() << std::endl;
+        get_primes<uint2048_t>();
+//std::cout << get_primes<uint4096_t>() << std::endl;
 }
 
-BENCHMARK(BM_get_key)->Unit(benchmark::kMillisecond);
+BENCHMARK(BM_get_primes)->Unit(benchmark::kMillisecond);
 
 
 static void BM_generate_number(benchmark::State& state) {
