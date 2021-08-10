@@ -16,8 +16,8 @@ jobs:
     - name: setup_google_test
       run: ./setup_google_benchmark.sh
     
-    - name: Compile
-      run: ./start.sh
+    - name: build
+      run: ./build.sh
       
     - name: Run
-      run: ./File-Protector
+      run: ./File_Protector
