@@ -1,0 +1,12 @@
+# List the start up tasks. Learn more https://www.gitpod.io/docs/config-start-tasks/
+tasks:
+  - init: Install full boost deps # runs during prebuild
+    command: sudo apt-get install libboost-all-dev && sh ./setup_google_benchmark.sh && sh ./build.sh
+  - name: Run Program
+    command: sh ./File_Protector
+    openMode: split-right
+
+# List the ports to expose. Learn more https://www.gitpod.io/docs/config-ports/
+ports:
+  - port: 3000
+    onOpen: open-preview
