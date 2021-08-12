@@ -18,22 +18,57 @@
 
 using namespace boost::multiprecision;
 
-#define generate_large_number_type(TYPENAME,pre_TYPENAME,BIT_COUNT) \
+template <typename T>
+T cpp_int_pow(T value, unsigned int exponent) {
+    if(exponent == 0)
+        return 1;
+    else if(exponent == 1) {
+        std::cout << "value: " << value << std::endl;
+        return value - 1;
+    }
+    else {
+        std::cout << value << std::endl;
+        if(exponent % 2 == 0) {
+            return cpp_int_pow(value * value, exponent / 2);
+        } else {
+            return value * cpp_int_pow(value, exponent - 1);
+        }
+    }
+}
+
+typedef number<cpp_int_backend<16777216,16777216,unsigned_magnitude,checked>> uint16777216_t;
+
+#define generate_large_number_type(TYPENAME,BIT_COUNT) \
     typedef number<cpp_int_backend<BIT_COUNT,BIT_COUNT,unsigned_magnitude,checked>> TYPENAME; \
     namespace std { \
         template<> class numeric_limits<TYPENAME> : public std::numeric_limits<unsigned int> { \
             public: \
                     static TYPENAME max() { \
-                        TYPENAME ret = (std::numeric_limits<pre_TYPENAME>::max)(); \
-                        return (ret*ret); \
+                    return ~(TYPENAME(0)); \
                     }; \
         }; \
     }
 
-generate_large_number_type(uint2048_t,uint1024_t,2048)
-generate_large_number_type(uint4096_t,uint2048_t,4096)
-generate_large_number_type(uint8192_t,uint4096_t,8192)
-generate_large_number_type(uint16384_t,uint8192_t,16384)
+generate_large_number_type(uint2048_t,2048)
+generate_large_number_type(uint4096_t,4096)
+generate_large_number_type(uint8192_t,8192)
+generate_large_number_type(uint16384_t,16384)
+generate_large_number_type(uint32768_t,32768)
+generate_large_number_type(uint65536_t,65536)
+generate_large_number_type(uint131072_t,131072)
+generate_large_number_type(uint262144_t,262144)
+generate_large_number_type(uint524288_t,524288)
+generate_large_number_type(uint1048576_t,1048576)
+generate_large_number_type(uint2097152_t,2097152)
+generate_large_number_type(uint4194304_t,4194304)
+generate_large_number_type(uint8388608_t,8388608)
+generate_large_number_type(uint16777216_t,16777216)
+
+template <typename T>
+uint16777216_t get_totient(std::pair<T,T> prime_pair) {
+    uint16777216_t t = (prime_pair.first - 1);
+    return t;
+}
 
 template <class T>
 T generate_number(boost::mt19937 &random_generator, T max) {
@@ -55,8 +90,11 @@ int getSeed() {
 template <class T>
 std::pair<T,T> get_primes() {
     std::pair<T,T> prime_pair(0,0); 
-    T max_num = (std::numeric_limits<T>::max)();
+    
+    auto max_num = std::numeric_limits<T>::max();
+    T limit = new T(max_num);
     boost::mt19937 random_generator((getSeed() + clock()));
+
     auto rand_num = generate_number(random_generator,max_num);
     boost::mt11213b second_generator(getSeed());
 
@@ -79,20 +117,25 @@ std::pair<T,T> get_primes() {
                 else 
                     prime_pair.second = values.second;
 
-                if(prime_pair.second != 0)
+                if(prime_pair.second != 0) {
+                    auto t = get_totient(prime_pair);
                     return prime_pair;
+                }
             }
         }
     }
 }
 
-template <typename T>
-uint16384_t get_totient(std::pair<T,T> prime_pair) {
-    //return ((prime_pair.first - 1) * (prime_pair.second - 1));
-    return 0;
-}
-
 //BENCHMARKS
+static void test_numeric_limits_func(benchmark::State& state) {
+	//std::cout << typeid(t).name() << std::endl;
+	std::cout << (std::numeric_limits<uint256_t>::max()) << std::endl;
+	std::cout << (std::numeric_limits<uint1024_t>::max()) << std::endl;
+	std::cout << (std::numeric_limits<uint2048_t>::max()) << std::endl;
+	std::cout << (std::numeric_limits<uint4096_t>::max()) << std::endl;
+}
+BENCHMARK(test_numeric_limits_func)->Iterations(1);
+
 template <typename T>
 static void BM_get_totient(benchmark::State& state) {
     std::pair<T,T> primes(get_primes<T>());
@@ -100,14 +143,14 @@ static void BM_get_totient(benchmark::State& state) {
         get_totient(primes);
 }
 
-BENCHMARK_TEMPLATE(BM_get_totient,uint1024_t)->Unit(benchmark::kMillisecond);
+//BENCHMARK_TEMPLATE(BM_get_totient,uint2048_t)->Unit(benchmark::kMillisecond);
 
 static void BM_getSeed(benchmark::State& state) {
     for(auto _ : state)
         getSeed();
 }
 
-BENCHMARK(BM_getSeed)->Unit(benchmark::kMillisecond);
+//BENCHMARK(BM_getSeed)->Unit(benchmark::kMillisecond);
 
 template <typename T>
 static void BM_get_primes(benchmark::State& state) {
@@ -115,7 +158,7 @@ static void BM_get_primes(benchmark::State& state) {
         get_primes<T>();
 }
 
-BENCHMARK_TEMPLATE(BM_get_primes,uint2048_t)->Unit(benchmark::kMillisecond);
+//BENCHMARK_TEMPLATE(BM_get_primes,uint2048_t)->Unit(benchmark::kMillisecond);
 
 static void BM_generate_number(benchmark::State& state) {
     boost::mt19937 generator(clock() + getSeed());
@@ -124,6 +167,6 @@ static void BM_generate_number(benchmark::State& state) {
         generate_number(generator,max_num);
 }
 
-BENCHMARK(BM_generate_number)->Unit(benchmark::kMillisecond);
+//BENCHMARK(BM_generate_number)->Unit(benchmark::kMillisecond);
 
 BENCHMARK_MAIN();
