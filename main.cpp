@@ -18,26 +18,6 @@
 
 using namespace boost::multiprecision;
 
-template <typename T>
-T cpp_int_pow(T value, unsigned int exponent) {
-    if(exponent == 0)
-        return 1;
-    else if(exponent == 1) {
-        std::cout << "value: " << value << std::endl;
-        return value - 1;
-    }
-    else {
-        std::cout << value << std::endl;
-        if(exponent % 2 == 0) {
-            return cpp_int_pow(value * value, exponent / 2);
-        } else {
-            return value * cpp_int_pow(value, exponent - 1);
-        }
-    }
-}
-
-typedef number<cpp_int_backend<16777216,16777216,unsigned_magnitude,checked>> uint16777216_t;
-
 #define generate_large_number_type(TYPENAME,BIT_COUNT) \
     typedef number<cpp_int_backend<BIT_COUNT,BIT_COUNT,unsigned_magnitude,checked>> TYPENAME; \
     namespace std { \
@@ -91,8 +71,7 @@ template <class T>
 std::pair<T,T> get_primes() {
     std::pair<T,T> prime_pair(0,0); 
     
-    auto max_num = std::numeric_limits<T>::max();
-    T limit = new T(max_num);
+    T max_num = std::numeric_limits<T>::max();
     boost::mt19937 random_generator((getSeed() + clock()));
 
     auto rand_num = generate_number(random_generator,max_num);
@@ -134,7 +113,7 @@ static void test_numeric_limits_func(benchmark::State& state) {
 	std::cout << (std::numeric_limits<uint2048_t>::max()) << std::endl;
 	std::cout << (std::numeric_limits<uint4096_t>::max()) << std::endl;
 }
-BENCHMARK(test_numeric_limits_func)->Iterations(1);
+//BENCHMARK(test_numeric_limits_func)->Iterations(1);
 
 template <typename T>
 static void BM_get_totient(benchmark::State& state) {
@@ -143,14 +122,14 @@ static void BM_get_totient(benchmark::State& state) {
         get_totient(primes);
 }
 
-//BENCHMARK_TEMPLATE(BM_get_totient,uint2048_t)->Unit(benchmark::kMillisecond);
+BENCHMARK_TEMPLATE(BM_get_totient,uint2048_t)->Unit(benchmark::kMillisecond);
 
 static void BM_getSeed(benchmark::State& state) {
     for(auto _ : state)
         getSeed();
 }
 
-//BENCHMARK(BM_getSeed)->Unit(benchmark::kMillisecond);
+BENCHMARK(BM_getSeed)->Unit(benchmark::kMillisecond);
 
 template <typename T>
 static void BM_get_primes(benchmark::State& state) {
@@ -158,7 +137,7 @@ static void BM_get_primes(benchmark::State& state) {
         get_primes<T>();
 }
 
-//BENCHMARK_TEMPLATE(BM_get_primes,uint2048_t)->Unit(benchmark::kMillisecond);
+BENCHMARK_TEMPLATE(BM_get_primes,uint2048_t)->Unit(benchmark::kMillisecond);
 
 static void BM_generate_number(benchmark::State& state) {
     boost::mt19937 generator(clock() + getSeed());
@@ -167,6 +146,6 @@ static void BM_generate_number(benchmark::State& state) {
         generate_number(generator,max_num);
 }
 
-//BENCHMARK(BM_generate_number)->Unit(benchmark::kMillisecond);
+BENCHMARK(BM_generate_number)->Unit(benchmark::kMillisecond);
 
 BENCHMARK_MAIN();
