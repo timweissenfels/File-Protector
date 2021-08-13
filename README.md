@@ -2,6 +2,9 @@
 
 Simple C++ Program to encrypt &amp; decrypt files 
 
+![](https://img.shields.io/github/issues/timweissenfels/File-Protector?style=for-the-badge)
+![GitHub commit activity](https://img.shields.io/github/commit-activity/m/timweissenfels/File-Protector?style=for-the-badge)
+![GitHub closed pull requests](https://img.shields.io/github/issues-pr-closed-raw/timweissenfels/File-Protector?style=for-the-badge)
 ## Preview
 
 
