@@ -1,13 +1,14 @@
-FROM debian:latest
+FROM debian:bullseye
 
 #Copy over Github repo to get install and cpp files
 COPY . /repo
 WORKDIR /repo
 
 #Install all CPP Boost libarys
-RUN apt-get update -y && apt-get upgrade -y
-RUN apt-get install g++ git cmake -y
-RUN apt-get install libboost-all-dev -y
+RUN apt-get update -y
+RUN apt-get install -y g++ git cmake libboost-all-dev \
+ && apt-get clean \
+ && rm -rf /var/lib/apt/lists/*
 
 #Setup Google Benchmarking libarys
 RUN sh ./setup_google_benchmark.sh
