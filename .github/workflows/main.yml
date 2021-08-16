@@ -22,8 +22,11 @@ jobs:
     - name: setup_google_test
       run: ./setup_google_benchmark.sh
     
-    - name: build
-      run: ./build.sh
-      
+    - name: cmake
+      run: cmake .
+    
+    - name: make
+      run: make
+    
     - name: Run
       run: ./File_Protector
