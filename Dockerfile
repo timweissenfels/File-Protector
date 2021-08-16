@@ -38,7 +38,8 @@ RUN echo 'debugger:pwd' | chpasswd
 RUN sh ./setup_google_benchmark.sh
 
 #Build executable file File_Protector
-RUN sh ./build.sh
+RUN cmake .
+RUN make
 
 # Run the program output from the previous step
 ENTRYPOINT ["/usr/sbin/sshd"]
