@@ -6,12 +6,12 @@ set(SOURCE_FILES main.cpp uint_bit_types.h calculations.h helper_functions.h hel
 
 #
 
-add_compile_options(-pthread -lbenchmark -isystem vendor/google/benchmark/include -Lbenchmark/build/src)
+add_compile_options(-pthread -lbenchmark -isystem benchmark/include -Lbenchmark/build/src)
 
 include(GoogleTest)
 
 set(BENCHMARK_ENABLE_TESTING OFF CACHE BOOL "Suppressing benchmark's tests" FORCE)
-add_subdirectory(vendor/google/benchmark)
+add_subdirectory(benchmark)
 
 find_package(Boost 1.36.0)
 if(Boost_FOUND)
