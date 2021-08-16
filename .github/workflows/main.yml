@@ -15,7 +15,9 @@ jobs:
     
     steps:
     - uses: actions/checkout@v2
-      
+      with:
+        submodules: 'true'
+        
     - name: setup_boost
       run: sudo apt-get install libboost-all-dev
     
