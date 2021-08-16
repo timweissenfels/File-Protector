@@ -1,0 +1,9 @@
+[submodule "vendor/google/googletest"]
+	path = vendor/google/googletest
+	url = https://github.com/google/googletest.git
+[submodule "vendor/google/benchmark"]
+	path = vendor/google/benchmark
+	url = https://github.com/google/benchmark.git
+[submodule "vendor/boost"]
+	path = vendor/boost
+	url = https://github.com/boostorg/program_options.git
