@@ -21,18 +21,19 @@ Simple C++ Program to encrypt &amp; decrypt files
 
 1. Clone the Repository and change into the Directory
 
-``
-git clone --recursive https://github.com/timweissenfels/File-Protector.git && cd File-Protector
-``
+`` git clone --recursive https://github.com/timweissenfels/File-Protector.git && cd File-Protector ``
 
-2. Build the Project via cmake and make
+2. Change into the Project directory
 
-``
-cmake . && make
-``
-3. Execute Program
+`` cd File-Protector ``
+
+3. Build the Project via cmake and make
+
+`` cmake . && make ``
+
+4. Execute Program
  
-``./File_Protector``
+`` ./File_Protector ``
 
 
 ## Preview
