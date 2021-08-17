@@ -6,6 +6,35 @@ Simple C++ Program to encrypt &amp; decrypt files
 ![](https://img.shields.io/github/issues/timweissenfels/File-Protector?style=flat)
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/m/timweissenfels/File-Protector?style=flatt)
 ![GitHub closed pull requests](https://img.shields.io/github/issues-pr-closed-raw/timweissenfels/File-Protector?style=flatt)
+
+## Installation and Setup
+
+### Build from source
+
+#### Dependencies
+- git
+- cmake
+- g++
+- libboost-all-dev
+
+#### Installation
+
+1. Clone the Repository and change into the Directory
+
+``
+git clone --recursive https://github.com/timweissenfels/File-Protector.git && cd File-Protector
+``
+
+2. Build the Project via cmake and make
+
+``
+cmake . && make
+``
+3. Execute Program
+ 
+``./File_Protector``
+
+
 ## Preview
 
 ![](https://media.discordapp.net/attachments/318055119302295552/871110321803251792/Unbenannt.png?width=1569&height=984)
