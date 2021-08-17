@@ -9,14 +9,14 @@
 using namespace boost::multiprecision;
 
 #define generate_large_number_type(TYPENAME,BIT_COUNT) \
-typedef number<cpp_int_backend<BIT_COUNT,BIT_COUNT,unsigned_magnitude,checked>> TYPENAME; \
+typedef number<cpp_int_backend<BIT_COUNT,BIT_COUNT,unsigned_magnitude,unchecked,void>> TYPENAME; \
 namespace std { \
-template<> class numeric_limits<TYPENAME> : public std::numeric_limits<unsigned int> { \
-public: \
-static TYPENAME max() { \
-return ~(TYPENAME(0)); \
-}; \
-}; \
+    template<> class numeric_limits<TYPENAME> : public std::numeric_limits<unsigned int> { \
+        public: \
+            static TYPENAME max() { \
+            return ~(TYPENAME(0)); \
+            }; \
+    }; \
 }
 
 generate_large_number_type(uint2048_t,2048)
