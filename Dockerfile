@@ -33,9 +33,16 @@ EXPOSE 22 7777
 RUN useradd -ms /bin/bash debugger
 RUN echo 'debugger:pwd' | chpasswd
 
+#Clone GTest
+RUN git clone https://github.com/google/googletest.git /repo/benchmark/googletest
+WORKDIR /repo/benchmark
 
-#Setup Google Benchmarking library'
-RUN sh ./setup_google_benchmark.sh
+#Build GBenchmark & GTest
+RUN cmake -E make_directory "build"
+RUN cmake -E chdir "build" cmake -DCMAKE_BUILD_TYPE=Release ../
+RUN cmake --build "build" --config Release
+
+WORKDIR /repo
 
 #Build executable file File_Protector
 RUN cmake .
