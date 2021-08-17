@@ -6,7 +6,7 @@ services:
   gdbserver:
     build:
       context: ./
-      dockerfile: ./Dockerfile
+      dockerfile: ./Dockerfile-dev-build
     image: clion_dev
     security_opt:
       - seccomp:unconfined
