@@ -13,9 +13,13 @@
 #include <vector>
 
 template <typename T>
-uint16777216_t get_totient(std::pair<T,T> prime_pair) {
-    uint16777216_t t = (prime_pair.first - 1) * (prime_pair.second - 1);
-    return t;
+cpp_int get_n_value(std::pair<T,T> prime_pair) {
+    return (prime_pair.first * prime_pair.second);
+}
+
+template <typename T>
+cpp_int get_totient(std::pair<T,T> prime_pair) {
+    return ((prime_pair.first - 1) * (prime_pair.second - 1));
 }
 
 //Return type defines key length (uint1024_t,uint2048_t uint4096_t,uint8192_t, etc.)
@@ -49,7 +53,6 @@ std::pair<T,T> get_primes() {
                     prime_pair.second = values.second;
 
                 if(prime_pair.second != 0) {
-                            auto t = get_totient(prime_pair);
                             return prime_pair;
                         }
                     }
