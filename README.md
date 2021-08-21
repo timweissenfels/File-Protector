@@ -25,7 +25,7 @@ Simple C++ Program to encrypt &amp; decrypt files
 
 2.  Change into the Project directory
 
-`` cd File-Protector ``
+`` cd FileProtector ``
 
 3.  Build the Project via cmake and make
 
