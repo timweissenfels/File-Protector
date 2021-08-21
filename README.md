@@ -1,4 +1,4 @@
-# File-Protector <img align="right" width="200" height="200" src="https://user-images.githubusercontent.com/32968964/129413089-6e66762e-de7e-4d2c-9a80-6eeea6d3cf24.png">
+# FileProtector <img align="right" width="200" height="200" src="https://user-images.githubusercontent.com/32968964/129413089-6e66762e-de7e-4d2c-9a80-6eeea6d3cf24.png">
 
 Simple C++ Program to encrypt &amp; decrypt files 
 
@@ -21,7 +21,7 @@ Simple C++ Program to encrypt &amp; decrypt files
 
 1.  Clone the Repository and change into the Directory
 
-`` git clone --recursive https://github.com/timweissenfels/File-Protector.git ``
+`` git clone --recursive https://github.com/timweissenfels/FileProtector.git ``
 
 2.  Change into the Project directory
 
